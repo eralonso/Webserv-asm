@@ -33,7 +33,8 @@
 		%1%2 %3
 	%endmacro
 
-
+	; The limit of 7 can be replaced by * to accept unlimited parameters.
+	; But then it must have created the function syscall_movreg*.
 	%macro syscall 1-7
 
 		%assign %%i 1
