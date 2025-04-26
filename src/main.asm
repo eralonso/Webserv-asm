@@ -2,38 +2,10 @@
 %include "syscall/std.inc"
 %include "profile.inc"
 %include "funcall.inc"
+%include "instructions.inc"
+%include "statements.inc"
 
 global _start 
-
-; Move by dereference twice the first parameter
-%macro movdd1 3
-
-	push rax
-	mov rax, [%1]
-	mov %3 [rax], %2
-	pop rax
-
-%endmacro
-
-; Move by dereference twice the second parameter
-%macro movdd2 3
-
-	push rax
-	mov rax, [%2]
-	mov %1, %3 [rax]
-	pop rax
-
-%endmacro
-
-; Compare by dereference twice the first parameter
-%macro cmpdd1 3
-
-	push rax
-	mov rax, [%1]
-	cmp %3 [rax], %2
-	pop rax
-
-%endmacro
 
 section .text
 
@@ -63,9 +35,44 @@ introduction:
 
 	ret
 
+putchar:
+
+	prologue 1
+
+	mov byte [rbp - 1], dil
+	lea rsi, [rbp - 1]
+
+	write STDOUT_FILENO, rsi, 1
+
+	epilogue
+
+	ret
+
 _start:
 
-	funcall introduction
+	prologue 1
+
+	; funcall introduction
+
+	mov byte [rbp - 1], 1
+
+	while byte [rbp - 1], le, 5
+
+		movzx rdi, byte [rbp - 1]
+		add rdi, '0'
+		funcall putchar, rdi
+
+		if byte [rbp - 1], e, 3
+			break
+		endif
+
+		inc byte [rbp - 1]
+
+	endwhile
+
+	funcall putchar, `\n` 
+
+	epilogue
 
 	exit 0
 
