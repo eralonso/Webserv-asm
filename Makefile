@@ -14,7 +14,7 @@ SRCS = main.asm
 
 OBJS = $(SRCS:%.asm=$(OBJ_ROOT)%.o)
 
-HEADERS := . syscall
+HEADERS := . syscall extended
 
 SRCS_DIRS := ./
 SRCS_DIRS := $(subst :,$(SPACE),$(SRCS_DIRS))
